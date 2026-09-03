@@ -1,0 +1,21 @@
+# IDEs
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+
+# Build
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.log
+
+# Sistema
+*.DS_Store
+Thumbs.db
+*.swp
+*.swo
