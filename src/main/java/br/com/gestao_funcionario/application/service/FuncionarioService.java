@@ -4,6 +4,7 @@ import br.com.gestao_funcionario.application.domain.Funcionario;
 import br.com.gestao_funcionario.application.repository.FuncionarioRepository;
 
 import java.util.List;
+import java.util.UUID;
 
 public class FuncionarioService {
     private  final FuncionarioRepository funcionarioRepository;
@@ -24,5 +25,18 @@ public class FuncionarioService {
         System.out.println("[Finaliza] FuncionarioService - buscarFuncionarios");
         return  funcionarios;
 
+    }
+
+    public Funcionario atualizaFuncionarios(UUID idFuncioanrio) {
+        System.out.println("[Inicia] FuncionarioService - atualizaFuncionarios");
+        Funcionario funcionario = funcionarioRepository.findById(idFuncioanrio);
+        funcionario.setNome("nome");
+        funcionario.setDesignacao("designacao");
+        funcionario.setSalario("salario");
+        funcionario.setTelefone("telefone");
+        funcionario.setEndereco("endereco");
+        funcionarioRepository.salvar(funcionario);
+        System.out.println("[Finaliza] FuncionarioService - atualizaFuncionarios");
+        return funcionario;
     }
 }

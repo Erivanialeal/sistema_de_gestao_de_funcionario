@@ -8,6 +8,6 @@ import java.util.UUID;
 public interface FuncionarioAPI {
     void cadastrarFuncionarios(Funcionario funcionario);
     List<Funcionario> buscarFuncionarios();
-    void atualizarFuncionarios(UUID idFuncioanrio);
+    Funcionario atualizarFuncionarios(UUID idFuncionario);
     void excluir(UUID idFuncionarios);
 }

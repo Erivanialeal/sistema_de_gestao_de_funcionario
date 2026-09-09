@@ -22,7 +22,6 @@ public class HttpServerApplication {
                 "/funcionarios",
                 endpoint::atender
         );
-        // 7. Inicia o servidor
         server.start();
 
         System.out.println("Servidor iniciado em http://localhost:8080");

@@ -47,6 +47,26 @@ public class Funcionario {
         return endereco;
     }
 
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setDesignacao(String designacao) {
+        this.designacao = designacao;
+    }
+
+    public void setSalario(String salario) {
+        this.salario = salario;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
+
     public void put(UUID idFuncionarios, Funcionario funcionario) {
     }
 }
