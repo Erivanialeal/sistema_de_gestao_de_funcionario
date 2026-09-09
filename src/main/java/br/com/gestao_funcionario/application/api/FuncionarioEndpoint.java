@@ -39,6 +39,10 @@ public class FuncionarioEndpoint {
             atualizarFuncionario(exchange);
             return;
         }
+        if("DELETE".equalsIgnoreCase(metodo)){
+            excluir(exchange);
+            return;
+        }
 
         exchange.sendResponseHeaders(405, -1);
         exchange.close();
@@ -144,5 +148,13 @@ public class FuncionarioEndpoint {
                 .write(resposta.getBytes(StandardCharsets.UTF_8));
 
         exchange.close();
+    }
+
+    public  void excluir(HttpExchange exchange)throws  IOException{
+        String requets = exchange.getRequestMethod();
+        funcionarioController.excluirTodosOsFuncionarios();
+        exchange.sendResponseHeaders(204,-1);
+        exchange.close();
+
     }
 }

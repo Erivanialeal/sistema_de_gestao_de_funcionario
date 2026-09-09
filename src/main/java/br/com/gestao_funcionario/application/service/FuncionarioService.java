@@ -42,4 +42,11 @@ public class FuncionarioService {
         System.out.println("[Finaliza] FuncionarioService - atualizaFuncionarios");
         return funcionario;
     }
+
+    public void excluirTodosOsFuncionarios() {
+        System.out.println("[Inicia] FuncionarioService - excluirTodosOsFuncionarios");
+        funcionarioRepository.excluirTodosOsFuncionarios();
+        System.out.println("[finaliza] FuncionarioService - excluirTodosOsFuncionarios");
+
+    }
 }
