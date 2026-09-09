@@ -29,9 +29,9 @@ public class FuncionarioController implements FuncionarioAPI {
     }
 
     @Override
-    public Funcionario atualizarFuncionarios(UUID idFuncionario) {
+    public Funcionario atualizarFuncionarios(UUID idFuncionario, Funcionario funcionarioAtualizado) {
         System.out.println("[Inicia] FuncionarioController - atualizarFuncionarios");
-        Funcionario funcionario = funcionarioService.atualizaFuncionarios(idFuncionario);
+        Funcionario funcionario = funcionarioService.atualizaFuncionarios(idFuncionario, funcionarioAtualizado);
         System.out.println("[finaliza] FuncionarioController - atualizarFuncionarios");
         return funcionario;
 

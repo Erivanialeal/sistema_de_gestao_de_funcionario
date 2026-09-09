@@ -27,14 +27,17 @@ public class FuncionarioService {
 
     }
 
-    public Funcionario atualizaFuncionarios(UUID idFuncioanrio) {
+    public Funcionario atualizaFuncionarios(UUID idFuncioanrio, Funcionario funcionarioAtualizado) {
         System.out.println("[Inicia] FuncionarioService - atualizaFuncionarios");
         Funcionario funcionario = funcionarioRepository.findById(idFuncioanrio);
-        funcionario.setNome("nome");
-        funcionario.setDesignacao("designacao");
-        funcionario.setSalario("salario");
-        funcionario.setTelefone("telefone");
-        funcionario.setEndereco("endereco");
+        if(funcionario == null){
+            throw new RuntimeException("Funcionario não encontrado");
+        }
+        funcionario.setNome(funcionarioAtualizado.getNome());
+        funcionario.setDesignacao(funcionarioAtualizado.getDesignacao());
+        funcionario.setSalario(funcionarioAtualizado.getSalario());
+        funcionario.setTelefone(funcionarioAtualizado.getTelefone());
+        funcionario.setEndereco(funcionarioAtualizado.getEndereco());
         funcionarioRepository.salvar(funcionario);
         System.out.println("[Finaliza] FuncionarioService - atualizaFuncionarios");
         return funcionario;

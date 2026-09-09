@@ -43,7 +43,7 @@ public class Funcionario {
         return telefone;
     }
 
-    public String getEndereço() {
+    public String getEndereco() {
         return endereco;
     }
 

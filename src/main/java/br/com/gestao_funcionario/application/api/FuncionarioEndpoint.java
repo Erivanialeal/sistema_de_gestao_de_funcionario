@@ -35,6 +35,11 @@ public class FuncionarioEndpoint {
             return;
         }
 
+        if("PUT".equalsIgnoreCase(metodo)){
+            atualizarFuncionario(exchange);
+            return;
+        }
+
         exchange.sendResponseHeaders(405, -1);
         exchange.close();
     }
@@ -91,6 +96,53 @@ public class FuncionarioEndpoint {
         );
         exchange.getResponseBody()
                 .write(resposta.getBytes(StandardCharsets.UTF_8));
+        exchange.close();
+    }
+
+    public  void atualizarFuncionario(HttpExchange exchange) throws IOException{
+       String caminho =exchange.getRequestURI().getPath();
+       String id = caminho.substring(caminho.lastIndexOf("/")+ 1);
+       UUID idFuncionario = UUID.fromString(id);
+
+       String body = new String(
+               exchange.getRequestBody().readAllBytes(),
+               StandardCharsets.UTF_8
+       );
+
+        JsonNode json = objectMapper.readTree(body);
+
+        String nome = json.get("nome").asText();
+        String designacao = json.get("designacao").asText();
+        String salario = json.get("salario").asText();
+        String telefone = json.get("telefone").asText();
+        String endereco = json.get("endereco").asText();
+
+        Funcionario funcionarioAtualizado = new Funcionario(
+                null,
+                nome,
+                designacao,
+                salario,
+                telefone,
+                endereco
+        );
+
+        Funcionario funcionario = funcionarioController.atualizarFuncionarios(
+                idFuncionario,
+                funcionarioAtualizado
+        );
+        String resposta =
+                objectMapper.writeValueAsString(funcionario);
+
+        exchange.getResponseHeaders()
+                .set("Content-Type", "application/json");
+
+        exchange.sendResponseHeaders(
+                200,
+                resposta.getBytes(StandardCharsets.UTF_8).length
+        );
+        exchange.getResponseBody()
+                .write(resposta.getBytes(StandardCharsets.UTF_8));
+
         exchange.close();
     }
 }

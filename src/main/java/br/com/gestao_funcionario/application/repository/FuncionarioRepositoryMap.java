@@ -28,4 +28,12 @@ public class FuncionarioRepositoryMap implements FuncionarioRepository {
         System.out.println("[Finaliza] FuncionarioRepositoryMap - findAll");
         return lista;
     }
+
+    @Override
+    public Funcionario findById(UUID idFuncioanrio) {
+        System.out.println("[inicia] FuncionarioRepositoryMap - findById");
+        Funcionario funcionario = funcionarios.get(idFuncioanrio);
+        System.out.println("[finaliza] FuncionarioRepositoryMap - findById");
+        return funcionario;
+    }
 }
