@@ -44,4 +44,13 @@ public class FuncionarioController implements FuncionarioAPI {
         System.out.println("[Finaliza] FuncionarioController - excluirTodosOsFuncionarios");
 
     }
+
+    @Override
+    public void excluirFuncionarioPorId(UUID idFuncionario) {
+        System.out.println("[Inicia] FuncionarioController - excluirFuncionarioPorId");
+        funcionarioService.excluirFuncionarioPorId(idFuncionario);
+        System.out.println("[finaliza] FuncionarioController - excluirFuncionarioPorId");
+
+
+    }
 }

@@ -49,4 +49,8 @@ public class FuncionarioService {
         System.out.println("[finaliza] FuncionarioService - excluirTodosOsFuncionarios");
 
     }
+
+    public void excluirFuncionarioPorId(UUID idFuncionario) {
+
+    }
 }

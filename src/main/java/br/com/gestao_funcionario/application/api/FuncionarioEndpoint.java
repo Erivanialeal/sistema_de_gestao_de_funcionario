@@ -24,6 +24,8 @@ public class FuncionarioEndpoint {
     public void atender(HttpExchange exchange) throws IOException {
 
         String metodo = exchange.getRequestMethod();
+        String caminho = exchange.getRequestURI().getPath();
+
 
         if ("POST".equalsIgnoreCase(metodo)) {
             cadastrar(exchange);
@@ -39,8 +41,14 @@ public class FuncionarioEndpoint {
             atualizarFuncionario(exchange);
             return;
         }
-        if("DELETE".equalsIgnoreCase(metodo)){
-            excluir(exchange);
+        if ("DELETE".equalsIgnoreCase(metodo)) {
+
+            if (caminho.equals("/funcionarios")) {
+                excluir(exchange);
+                return;
+            }
+
+            excluirFuncionarioPorId(exchange);
             return;
         }
 
@@ -153,6 +161,16 @@ public class FuncionarioEndpoint {
     public  void excluir(HttpExchange exchange)throws  IOException{
         String requets = exchange.getRequestMethod();
         funcionarioController.excluirTodosOsFuncionarios();
+        exchange.sendResponseHeaders(204,-1);
+        exchange.close();
+
+    }
+
+    public  void excluirFuncionarioPorId(HttpExchange exchange) throws IOException{
+        String caminho =exchange.getRequestURI().getPath();
+        String id = caminho.substring(caminho.lastIndexOf("/")+ 1);
+        UUID idFuncionario = UUID.fromString(id);
+        funcionarioController.excluirFuncionarioPorId(idFuncionario);
         exchange.sendResponseHeaders(204,-1);
         exchange.close();
 

@@ -10,4 +10,5 @@ public interface FuncionarioAPI {
     List<Funcionario> buscarFuncionarios();
     Funcionario atualizarFuncionarios(UUID idFuncionario, Funcionario funcionarioAtualizado);
     void excluirTodosOsFuncionarios();
+    void excluirFuncionarioPorId(UUID idFuncionario);
 }
