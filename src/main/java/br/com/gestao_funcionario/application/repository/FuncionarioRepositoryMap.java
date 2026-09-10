@@ -43,4 +43,12 @@ public class FuncionarioRepositoryMap implements FuncionarioRepository {
         funcionarios.clear();
         System.out.println("[finaliza] FuncionarioRepositoryMap - excluirTodosOsFuncionarios");
     }
+
+    @Override
+    public void excluirFuncionarioPorId(UUID idFuncionario) {
+        System.out.println("[inicia] FuncionarioRepositoryMap - excluirFuncionarioPorId");
+        funcionarios.remove(idFuncionario);
+        System.out.println("[finaliza] FuncionarioRepositoryMap - excluirFuncionarioPorId");
+
+    }
 }

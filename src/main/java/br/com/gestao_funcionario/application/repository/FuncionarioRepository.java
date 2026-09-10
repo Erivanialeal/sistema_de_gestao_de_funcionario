@@ -11,4 +11,5 @@ public interface FuncionarioRepository {
     List<Funcionario> findAll();
     Funcionario findById(UUID idFuncioanrio);
     void excluirTodosOsFuncionarios();
+    void excluirFuncionarioPorId(UUID idFuncionario);
 }
