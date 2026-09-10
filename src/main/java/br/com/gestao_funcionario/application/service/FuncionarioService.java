@@ -1,6 +1,8 @@
 package br.com.gestao_funcionario.application.service;
 
 import br.com.gestao_funcionario.application.domain.Funcionario;
+import br.com.gestao_funcionario.application.exception.FuncionarioNotFoundException;
+import br.com.gestao_funcionario.application.exception.FuncionarioValidationException;
 import br.com.gestao_funcionario.application.repository.FuncionarioRepository;
 
 import java.util.List;
@@ -15,6 +17,22 @@ public class FuncionarioService {
 
     public void cadastrarFuncionario(Funcionario funcionario) {
         System.out.println("[Inicia] FuncionarioService - cadastrarFuncionario");
+
+        if(funcionario.getNome() == null || funcionario.getNome().isBlank()){
+            throw new FuncionarioValidationException(" O nome do funcionario é obrigatorio! ");}
+
+        if(funcionario.getDesignacao() == null || funcionario.getDesignacao().isBlank()){
+            throw new FuncionarioValidationException(" A Designação  do funcionario é obrigatorio! ");}
+
+        if(funcionario.getSalario() == null || funcionario.getSalario().isBlank()){
+            throw new FuncionarioValidationException(" O sálario  do funcionario é obrigatorio! ");}
+
+        if(funcionario.getTelefone() == null || funcionario.getTelefone().isBlank()){
+            throw new FuncionarioValidationException(" O telefone  do funcionario é obrigatorio! ");}
+
+        if(funcionario.getEndereco() == null || funcionario.getEndereco().isBlank()){
+            throw new FuncionarioValidationException(" O endereço  do funcionario é obrigatorio! ");}
+
         funcionarioRepository.salvar(funcionario);
         System.out.println("[Finaliza] FuncionarioService - cadastrarFuncionario");
     }
@@ -31,7 +49,7 @@ public class FuncionarioService {
         System.out.println("[Inicia] FuncionarioService - atualizaFuncionarios");
         Funcionario funcionario = funcionarioRepository.findById(idFuncioanrio);
         if(funcionario == null){
-            throw new RuntimeException("Funcionario não encontrado");
+            throw new FuncionarioNotFoundException("Funcionario não encontrado");
         }
         funcionario.setNome(funcionarioAtualizado.getNome());
         funcionario.setDesignacao(funcionarioAtualizado.getDesignacao());

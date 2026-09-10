@@ -1,5 +1,6 @@
 package br.com.gestao_funcionario.application.api;
 import br.com.gestao_funcionario.application.domain.Funcionario;
+import br.com.gestao_funcionario.application.exception.FuncionarioValidationException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sun.net.httpserver.HttpExchange;
@@ -57,42 +58,51 @@ public class FuncionarioEndpoint {
     }
 
     public void cadastrar(HttpExchange exchange) throws IOException {
-        String body =new String(
-                exchange.getRequestBody().readAllBytes(),
-                StandardCharsets.UTF_8
-        );
+        try {
+            String body =new String(
+                    exchange.getRequestBody().readAllBytes(),
+                    StandardCharsets.UTF_8
+            );
 
-        JsonNode json = objectMapper.readTree(body);
-        UUID idFuncionario = UUID.randomUUID();
+            JsonNode json = objectMapper.readTree(body);
+            UUID idFuncionario = UUID.randomUUID();
 
-        String nome = json.get("nome").asText();
-        String designacao = json.get("designacao").asText();
-        String salario = json.get("salario").asText();
-        String telefone = json.get("telefone").asText();
-        String endereco= json.get("endereco").asText();
+            String nome = json.get("nome").asText();
+            String designacao = json.get("designacao").asText();
+            String salario = json.get("salario").asText();
+            String telefone = json.get("telefone").asText();
+            String endereco= json.get("endereco").asText();
 
-        Funcionario funcionario = new Funcionario(
-                idFuncionario,
-                nome,
-                designacao,
-                salario,
-                telefone,
-                endereco
-        );
+            Funcionario funcionario = new Funcionario(
+                    idFuncionario,
+                    nome,
+                    designacao,
+                    salario,
+                    telefone,
+                    endereco
+            );
 
-        funcionarioController.cadastrarFuncionarios(funcionario);
-        String resposta = objectMapper.writeValueAsString(funcionario);
-        exchange.getResponseHeaders()
-                .set("Content-Type","application/json");
+            funcionarioController.cadastrarFuncionarios(funcionario);
+            String resposta = objectMapper.writeValueAsString(funcionario);
+            exchange.getResponseHeaders()
+                    .set("Content-Type","application/json");
 
-        exchange.sendResponseHeaders(
-                201, resposta.getBytes(StandardCharsets.UTF_8).length
-        );
+            exchange.sendResponseHeaders(201, resposta.getBytes(StandardCharsets.UTF_8).length);
+            exchange.close();
 
-        exchange.getResponseBody()
-                .write(resposta.getBytes(StandardCharsets.UTF_8));
+        }catch (FuncionarioValidationException e){
+            String resposta = e.getMessage();
+            exchange.getResponseHeaders()
+                    .set("Content-Type", "text/plain; charset=UTF-8");
 
-        exchange.close();
+            exchange.sendResponseHeaders(
+                    400,resposta.getBytes(StandardCharsets.UTF_8).length
+            );
+            exchange.getResponseBody()
+                    .write(resposta.getBytes(StandardCharsets.UTF_8));
+
+            exchange.close();
+        }
     }
 
     public void buscarFuncionarios(HttpExchange exchange) throws IOException{
