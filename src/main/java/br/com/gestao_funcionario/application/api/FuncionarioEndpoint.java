@@ -1,5 +1,6 @@
 package br.com.gestao_funcionario.application.api;
 import br.com.gestao_funcionario.application.domain.Funcionario;
+import br.com.gestao_funcionario.application.exception.FuncionarioNotFoundException;
 import br.com.gestao_funcionario.application.exception.FuncionarioValidationException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -122,50 +123,59 @@ public class FuncionarioEndpoint {
     }
 
     public  void atualizarFuncionario(HttpExchange exchange) throws IOException{
-       String caminho =exchange.getRequestURI().getPath();
-       String id = caminho.substring(caminho.lastIndexOf("/")+ 1);
-       UUID idFuncionario = UUID.fromString(id);
+        try {
+            String caminho =exchange.getRequestURI().getPath();
+            String id = caminho.substring(caminho.lastIndexOf("/")+ 1);
+            UUID idFuncionario = UUID.fromString(id);
 
-       String body = new String(
-               exchange.getRequestBody().readAllBytes(),
-               StandardCharsets.UTF_8
-       );
+            String body = new String(
+                    exchange.getRequestBody().readAllBytes(),
+                    StandardCharsets.UTF_8
+            );
 
-        JsonNode json = objectMapper.readTree(body);
+            JsonNode json = objectMapper.readTree(body);
 
-        String nome = json.get("nome").asText();
-        String designacao = json.get("designacao").asText();
-        String salario = json.get("salario").asText();
-        String telefone = json.get("telefone").asText();
-        String endereco = json.get("endereco").asText();
+            String nome = json.get("nome").asText();
+            String designacao = json.get("designacao").asText();
+            String salario = json.get("salario").asText();
+            String telefone = json.get("telefone").asText();
+            String endereco = json.get("endereco").asText();
 
-        Funcionario funcionarioAtualizado = new Funcionario(
-                null,
-                nome,
-                designacao,
-                salario,
-                telefone,
-                endereco
-        );
+            Funcionario funcionarioAtualizado = new Funcionario(
+                    null,
+                    nome,
+                    designacao,
+                    salario,
+                    telefone,
+                    endereco
+            );
 
-        Funcionario funcionario = funcionarioController.atualizarFuncionarios(
-                idFuncionario,
-                funcionarioAtualizado
-        );
-        String resposta =
-                objectMapper.writeValueAsString(funcionario);
+            Funcionario funcionario = funcionarioController.atualizarFuncionarios(
+                    idFuncionario,
+                    funcionarioAtualizado
+            );
+            String resposta =
+                    objectMapper.writeValueAsString(funcionario);
 
-        exchange.getResponseHeaders()
-                .set("Content-Type", "application/json");
+            exchange.getResponseHeaders()
+                    .set("Content-Type", "application/json");
 
-        exchange.sendResponseHeaders(
-                200,
-                resposta.getBytes(StandardCharsets.UTF_8).length
-        );
-        exchange.getResponseBody()
-                .write(resposta.getBytes(StandardCharsets.UTF_8));
+            exchange.sendResponseHeaders(
+                    200,
+                    resposta.getBytes(StandardCharsets.UTF_8).length
+            );
+            exchange.close();
 
-        exchange.close();
+        }catch (FuncionarioNotFoundException e){
+            String resposta = e.getMessage();
+            exchange.getResponseHeaders()
+                    .set("Content-Type", "text/plain; charset=UTF-8");
+            exchange.sendResponseHeaders(404, resposta.getBytes(StandardCharsets.UTF_8).length);
+            exchange.getResponseBody()
+                    .write(resposta.getBytes(StandardCharsets.UTF_8));
+
+            exchange.close();
+        }
     }
 
     public  void excluir(HttpExchange exchange)throws  IOException{
@@ -177,12 +187,41 @@ public class FuncionarioEndpoint {
     }
 
     public  void excluirFuncionarioPorId(HttpExchange exchange) throws IOException{
-        String caminho =exchange.getRequestURI().getPath();
-        String id = caminho.substring(caminho.lastIndexOf("/")+ 1);
-        UUID idFuncionario = UUID.fromString(id);
-        funcionarioController.excluirFuncionarioPorId(idFuncionario);
-        exchange.sendResponseHeaders(204,-1);
-        exchange.close();
+        try {
+            String caminho =exchange.getRequestURI().getPath();
+            String id = caminho.substring(caminho.lastIndexOf("/")+ 1);
+
+            UUID idFuncionario = UUID.fromString(id);
+            funcionarioController.excluirFuncionarioPorId(idFuncionario);
+            exchange.sendResponseHeaders(204,-1);
+            exchange.close();
+
+        }catch (FuncionarioNotFoundException e){
+            String resposta = e.getMessage();
+            exchange.getResponseHeaders()
+                    .set("Content-Type", "text/plain; charset=UTF-8");
+            byte[] respostaBytes = resposta.getBytes(StandardCharsets.UTF_8);
+            exchange.sendResponseHeaders(404,respostaBytes.length);
+            exchange.getResponseBody()
+                    .write(respostaBytes);
+            exchange.close();
+        }catch (IllegalArgumentException e) {
+
+            String resposta = "ID do funcionário inválido";
+
+            exchange.getResponseHeaders()
+                    .set("Content-Type", "text/plain; charset=UTF-8");
+
+            byte[] respostaBytes =
+                    resposta.getBytes(StandardCharsets.UTF_8);
+
+            exchange.sendResponseHeaders(400, respostaBytes.length);
+
+            exchange.getResponseBody()
+                    .write(respostaBytes);
+
+            exchange.close();
+        }
 
     }
 }

@@ -70,6 +70,10 @@ public class FuncionarioService {
 
     public void excluirFuncionarioPorId(UUID idFuncionario) {
         System.out.println("[Inicia] FuncionarioService - excluirFuncionarioPorId");
+        Funcionario funcionario = funcionarioRepository.findById(idFuncionario);
+        if(funcionario == null){
+            throw  new FuncionarioNotFoundException("Funcionario não encontrado");
+        }
         funcionarioRepository.excluirFuncionarioPorId(idFuncionario);
         System.out.println("[finaliza] FuncionarioService - excluirFuncionarioPorId");
 
